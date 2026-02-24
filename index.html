@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --dark-green: #84B179;
+            --green: #A2CB8B;
+            --light-green: #C7EABB;
+            --yellow: #E8F5BD;
+        }
+
+        header {
+            padding: 10px 0px;
+            text-align: center;
+            background-color: var(--dark-green);
+            color: var(--yellow);
+        }
+
+        main {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--light-green);
+        }
+
+        #area {
+            border: 5px solid var(--dark-green);
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+        }
+
+        img {
+            margin-left: 80px;
+            width: 120px;
+        }
+
+    </style>
+    <title>Sensor de Presença</title>
+</head>
+<body>
+    <header>
+        <h1>Sensor de Presença</h1>
+    </header>
+
+    <main>
+        <div id="area">
+
+        </div>
+
+        <div>
+            <img id="img-led" src="./assets/led-off.png" alt="Led">
+        </div>
+    </main>
+    
+
+    <script>
+        const host = 'http://localhost:8080'
+        const body = document.body
+        const area = document.getElementById("area")
+        const led = document.getElementById("img-led")
+        let status = false;
+        let mouseEnter = false;
+
+        function render() {
+          if (status) {
+            led.src = './assets/led-on.png';
+          } else {
+            led.src = './assets/led-off.png';
+          }
+        }
+        
+        async function load() {
+            const resp = await fetch(`${host}/api/status`);
+            const { status: newStatus } = await resp.json();
+            status = newStatus;
+            render();
+        }
+
+        async function toggle() {
+            await fetch(`${host}/api/toggle`, {
+                method: 'POST',
+            })
+            status = !status;
+            load();
+        }
+
+        load().then(() => {
+            if (status) toggle();
+        });
+
+        area.addEventListener('mouseover', toggle)
+        area.addEventListener('mouseleave', toggle)
+
+        
+    </script>
+</body>
+</html>
