@@ -43,7 +43,6 @@
             margin-left: 80px;
             width: 120px;
         }
-
     </style>
     <title>Sensor de Presença</title>
 </head>
@@ -61,15 +60,14 @@
             <img id="img-led" src="./assets/led-off.png" alt="Led">
         </div>
     </main>
-    
 
     <script>
         const host = 'http://localhost:8080'
         const body = document.body
         const area = document.getElementById("area")
         const led = document.getElementById("img-led")
+
         let status = false;
-        let mouseEnter = false;
 
         function render() {
           if (status) {
@@ -90,7 +88,6 @@
             await fetch(`${host}/api/toggle`, {
                 method: 'POST',
             })
-            status = !status;
             load();
         }
 
@@ -101,7 +98,6 @@
         area.addEventListener('mouseover', toggle)
         area.addEventListener('mouseleave', toggle)
 
-        
     </script>
 </body>
 </html>
